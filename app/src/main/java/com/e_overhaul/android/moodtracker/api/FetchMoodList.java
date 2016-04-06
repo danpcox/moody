@@ -11,11 +11,10 @@ import java.util.List;
 import android.os.AsyncTask;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
-import android.widget.ArrayAdapter;
 
 
 import com.e_overhaul.android.moodtracker.CustomMoodListAdapter;
-import com.e_overhaul.android.moodtracker.Mood;
+import com.e_overhaul.android.moodtracker.object.Mood;
 import com.e_overhaul.android.moodtracker.util.APIHelper;
 import com.e_overhaul.android.moodtracker.util.DataCache;
 
@@ -119,7 +118,6 @@ public class FetchMoodList extends AsyncTask<List<String>, Void, List<Mood>>{
         Log.v(LOG_TAG, "In onPostExecute about to set adapter");
         _mMoodListAdapter.clear();
         for(int i=0; i<data.size(); i++) {
-            Log.v(LOG_TAG, data.get(i).getMoodName());
             _mMoodListAdapter.add(data.get(i));
         }
         _mSwipeRefreshLayout.setRefreshing(false);

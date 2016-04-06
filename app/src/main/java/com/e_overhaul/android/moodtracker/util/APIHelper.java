@@ -5,7 +5,7 @@ import java.util.List;
 
 import android.util.Log;
 
-import com.e_overhaul.android.moodtracker.Mood;
+import com.e_overhaul.android.moodtracker.object.Mood;
 
 import org.json.JSONArray;
 import org.json.JSONException;

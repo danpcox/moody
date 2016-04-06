@@ -10,6 +10,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.e_overhaul.android.moodtracker.object.Mood;
+
 /**
  * Created by dcox on 4/6/16.
  */
@@ -32,7 +34,7 @@ public class CustomMoodListAdapter extends ArrayAdapter<Mood> {
         ImageView imageView = (ImageView)rowView.findViewById(R.id.imageViewMoodListItem);
 // Set the data in the list view
         moodName.setText(currentMood.getMoodName());
-        moodTime.setText(currentMood.getMoodTime());
+        moodTime.setText(currentMood.getTimeSince());
         imageView.setImageBitmap(currentMood.getMoodImage());
 
         return rowView;
