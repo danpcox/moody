@@ -2,37 +2,37 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="horizontal"
               android:layout_width="fill_parent"
-              android:layout_height="fill_parent">
+              android:layout_height="fill_parent"
+              android:layout_marginTop="10dp"
+    >
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:maxWidth="50dp"
         android:maxHeight="50dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
         android:scaleType="fitCenter"
         android:adjustViewBounds="true"
         android:src="@drawable/nervous"
-        android:layout_gravity="center_horizontal"
+        android:layout_gravity="center_horizontal|center_vertical"
         android:id="@+id/imageViewMoodListItem"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Mood Name"
-        android:paddingTop="20dp"
-        android:paddingLeft="10dp"
+        android:paddingLeft="20dp"
         android:width="100dp"
         android:id="@+id/textViewMoodNameMoodListItem"
-        android:layout_gravity="center_horizontal"/>
+        android:layout_gravity="center_horizontal|center_vertical"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Mood Date"
-        android:paddingTop="20dp"
         android:paddingLeft="10dp"
         android:id="@+id/textViewMoodTimeMoodListItem"
-        android:layout_gravity="center_horizontal"/>
+        android:layout_gravity="center_horizontal|center_vertical"/>
 </LinearLayout>

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest package="com.e_overhaul.android.moodtracker"
           xmlns:android="http://schemas.android.com/apk/res/android">
-<!-- Connect to internet -->
+
+    <!-- Connect to internet -->
     <uses-permission android:name="android.permission.INTERNET"/>
-<!-- Save cache to disk -->
+    <!-- Save cache to disk -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-<!-- Access GPS -->
+    <!-- Access GPS -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
@@ -30,6 +31,20 @@
             android:label="@string/title_activity_mood_list"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.e_overhaul.android.moodtracker.MainActivity"/>
+        </activity>
+        <activity
+            android:name=".MoodEntryDetails"
+            android:label="@string/title_activity_mood_entry_details"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.e_overhaul.android.moodtracker.MainActivity"/>
+        </activity>
+        <activity android:name=".ConfirmMood">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.e_overhaul.android.moodtracker.MainActivity"/>

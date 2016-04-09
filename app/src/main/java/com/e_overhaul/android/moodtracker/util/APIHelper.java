@@ -43,4 +43,21 @@ public class APIHelper {
         }
         return false;
     }
+    public static List<String> getMoodDescriptions(String jsonStr) throws JSONException {
+        List<String> returnList = new ArrayList<String>();
+        JSONObject result = new JSONObject(jsonStr);
+        if(result.has("mood_descriptions")) {
+            JSONArray moodAry = result.getJSONArray("mood_descriptions");
+            returnList.add("None");
+            for (int i = 0; i < moodAry.length(); i++) {
+                JSONObject statObj = moodAry.getJSONObject(i);
+                String moodDescription = statObj.getString("mood_description_name");
+                if(!moodDescription.equals("None")) {
+                    returnList.add(moodDescription);
+                }
+            }
+        }
+        Log.v(LOG_TAG, "Returning array of size: " + returnList.size());
+        return returnList;
+    }
 }

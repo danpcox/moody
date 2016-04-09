@@ -5,4 +5,6 @@
     <string name="title_activity_mood_list">Mood List</string>
     <!-- The name of the file we store our preferences in -->
     <string name="preference_file_key">com.e_overhaul.android.Mood_PREFS</string>
+    <string name="title_activity_mood_entry_details">MoodEntryDetails</string>
+    <string name="action_settings">Settings</string>
 </resources>

@@ -244,4 +244,36 @@
             />
 
     </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/excitedLayout"
+        android:id="@+id/fartLayout"
+        android:layout_toRightOf="@id/nervousLayout"
+        >
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageButtonFart"
+            android:maxWidth="150dp"
+            android:maxHeight="150dp"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:src="@drawable/fart"
+            android:onClick="recordMood"
+            android:contentDescription="Fart Bench"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Farty"
+            android:id="@+id/textViewFart"
+            android:layout_below="@+id/imageButtonFart"
+            android:layout_centerInParent="true"
+            />
+
+    </RelativeLayout>
 </RelativeLayout>

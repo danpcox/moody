@@ -3,6 +3,7 @@ package com.e_overhaul.android.moodtracker.object;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 import android.graphics.Bitmap;
 import android.util.Log;
@@ -33,11 +34,10 @@ public class Mood {
         mMoodImage = DataCache.getInstance().getMoodImage(mMoodName);
 
 //Attempt to parse the date.  Stored in PST
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        format.setTimeZone(TimeZone.getTimeZone("UTC"));
         try {
-            Log.v(LOG_TAG, "Parsing " + mMoodTimeString);
             mMoodDate = format.parse(mMoodTimeString);
-            Log.v(LOG_TAG, "got " + mMoodDate.toString());
         } catch (ParseException e) {
             Log.e(LOG_TAG, e.getLocalizedMessage());
         }
@@ -57,11 +57,15 @@ public class Mood {
     public String getTimeSince() {
         StringBuilder result = new StringBuilder();
         Date curDate = new Date();
-        Log.v(LOG_TAG, "Current item time - " + mMoodDate.toString());
-        Log.v(LOG_TAG, "Now Time - " + curDate.toString());
         long timeDiff = curDate.getTime() - mMoodDate.getTime();
-        Log.v(LOG_TAG, "Time since - " + timeDiff);
-
+        timeDiff = timeDiff/1000;
+        if(timeDiff < 3600) {
+            result.append(timeDiff/60 + " minutes ago");
+        } else if(timeDiff >=3600 && timeDiff < 24*3600) {
+            result.append(timeDiff/3600 + " hours Ago");
+        } else {
+            result.append(timeDiff/(24*3600) + " days Ago");
+        }
         return result.toString();
     }
 }

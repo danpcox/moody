@@ -6,11 +6,16 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
-import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
+import android.widget.ArrayAdapter;
 
+import com.e_overhaul.android.moodtracker.CustomMoodListAdapter;
+import com.e_overhaul.android.moodtracker.object.Mood;
 import com.e_overhaul.android.moodtracker.util.APIHelper;
 import com.e_overhaul.android.moodtracker.util.DataCache;
 
@@ -19,56 +24,51 @@ import javax.net.ssl.HttpsURLConnection;
 /**
  * Created by dcox on 3/31/16.
  */
-public class RecordMood extends AsyncTask<String, Void, Boolean>{
+public class FetchMoodDescriptionList extends AsyncTask<Void, Void, List<String>>{
+
+    private SwipeRefreshLayout _mSwipeRefreshLayout;
+    private static List<String> _mMoodDescriptionList;
+    private ArrayAdapter<String> _mArrayAdapter;
+
+    public FetchMoodDescriptionList (SwipeRefreshLayout refreshLayout, ArrayAdapter<String> arrayAdapter) {
+        _mSwipeRefreshLayout = refreshLayout;
+        _mArrayAdapter = arrayAdapter;
+    }
+
+    public static void resetMoodDescriptionList () {
+        if(_mMoodDescriptionList != null) {
+            Log.v(LOG_TAG, "Resetting list son!");
+            _mMoodDescriptionList.clear();
+        }
+    }
 
 
-    private static final String LOG_TAG = RecordMood.class.getSimpleName();
+    private static final String LOG_TAG = FetchMoodDescriptionList.class.getSimpleName();
 
-
-// Record a mood event and send it to the server.
-// Arguments are a Mood and also an optional description
     @Override
-    protected Boolean doInBackground (String... params) {
+    protected List<String> doInBackground (Void... params) {
+
+        if(_mMoodDescriptionList != null && !_mMoodDescriptionList.isEmpty()) {
+            Log.v(LOG_TAG, "Returning cached Workout Routines");
+            return _mMoodDescriptionList;
+        } else {
+            Log.v(LOG_TAG, "_mWorkoutRoutines is null, go get data");
+        }
+        List<String> returnList = new ArrayList<String>();
+
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
         String jsonResult = null;
-        final String MOOD_PARAM = "mood";
-        final String USER_PARAM = "user";
-        final String LAT_PARAM = "lat";
-        final String LONG_PARAM = "long";
-        final String GENDER_PARAM = "gender";
-        final String MOOD_DESC_PARAM = "desc";
-// Get passed in arguments
-        String mood = params[0];
-        String moodDesc = "";
-        if(params.length > 1) {
-            moodDesc = params[1];
-        }
-
-// Get the GPS info
-        String user = DataCache.getInstance().getDeviceID();
-        String lat = Double.valueOf(DataCache.getInstance().getLat()).toString();
-        String longitude = Double.valueOf(DataCache.getInstance().getLong()).toString();
-// Get gender
-        String gender = DataCache.getInstance().getGender();
-        String apiURI = "https://www.e-overhaul.com/Moods/api/addMood.php?";
+        String apiURI = "https://www.e-overhaul.com/Moods/api/listMoodDescriptions.php?user=" + DataCache.getInstance().getDeviceID();
 
         try {
-            // Construct the URL for the mood query
-            Uri builtUri = Uri.parse(apiURI).buildUpon()
-                              .appendQueryParameter(MOOD_PARAM, mood)
-                              .appendQueryParameter(USER_PARAM, user)
-                              .appendQueryParameter(LAT_PARAM, lat)
-                              .appendQueryParameter(LONG_PARAM, longitude)
-                              .appendQueryParameter(GENDER_PARAM, gender)
-                              .appendQueryParameter(MOOD_DESC_PARAM, moodDesc)
-                              .build();
-            URL url = new URL(builtUri.toString());
-            // Create the request to /api/addMood.php
+            // Construct the URL for the stats query
+            URL url = new URL(apiURI);
+            // Create the request to /api/listRoutines.php
             urlConnection = (HttpsURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");
             urlConnection.connect();
-            Log.v(LOG_TAG, "Got get URL - " + builtUri.toString());
+            Log.v(LOG_TAG, "Got get URL - " + apiURI);
 
             // Read the input stream into a String
             InputStream inputStream = urlConnection.getInputStream();
@@ -92,8 +92,10 @@ public class RecordMood extends AsyncTask<String, Void, Boolean>{
                 return null;
             }
             jsonResult = buffer.toString();
-            Log.v(LOG_TAG, "JSON Result: " + jsonResult);
-            return APIHelper.successfulPost(jsonResult);
+            Log.v(LOG_TAG, "jsonResult is - " + jsonResult);
+
+            _mMoodDescriptionList = APIHelper.getMoodDescriptions(jsonResult);
+            return _mMoodDescriptionList;
 
         } catch (Exception e) {
             Log.e(LOG_TAG, "Error ", e);
@@ -111,16 +113,22 @@ public class RecordMood extends AsyncTask<String, Void, Boolean>{
                     Log.e(LOG_TAG, "Error closing stream", e);
                 }
             }
-
         }
     }
 
     @Override
-    protected void onPostExecute(Boolean data) {
-        Log.v(LOG_TAG, "In onPostExecute about to say " + data);
-        if(data == false) {
-
+    protected void onPostExecute(List<String> data) {
+        Log.v(LOG_TAG, "In onPostExecute about to set adapter");
+        _mArrayAdapter.clear();
+        for(int i=0; i<data.size(); i++) {
+            _mArrayAdapter.add(data.get(i));
+        }
+        if(_mSwipeRefreshLayout != null) {
+            _mSwipeRefreshLayout.setRefreshing(false);
         }
         super.onPostExecute(data);
     }
+
+
+
 }

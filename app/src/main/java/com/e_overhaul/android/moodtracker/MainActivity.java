@@ -1,5 +1,7 @@
 package com.e_overhaul.android.moodtracker;
 
+import java.util.zip.Inflater;
+
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
@@ -11,14 +13,19 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
+import com.e_overhaul.android.moodtracker.api.FetchMoodDescriptionList;
 import com.e_overhaul.android.moodtracker.api.FetchMoodList;
 import com.e_overhaul.android.moodtracker.api.RecordMood;
 import com.e_overhaul.android.moodtracker.util.DataCache;
@@ -70,38 +77,37 @@ public class MainActivity extends AppCompatActivity {
 
     public void recordMood (View v) {
         RecordMood rm = new RecordMood();
+        String intentExtra = "";
         switch (v.getId()) {
         case R.id.imageButtonAngry:
-            Toast.makeText(getApplicationContext(), "Angry", Toast.LENGTH_SHORT).show();
-            rm.execute("angry");
+            intentExtra = "angry";
             break;
         case R.id.imageButtonAnxious:
-            Toast.makeText(getApplicationContext(), "Anxious", Toast.LENGTH_SHORT).show();
-            rm.execute("anxious");
+            intentExtra = "anxious";
+            break;
+        case R.id.imageButtonFart:
+            intentExtra = "farty";
             break;
         case R.id.imageButtonDepressed:
-            Toast.makeText(getApplicationContext(), "Depressed", Toast.LENGTH_SHORT).show();
-            rm.execute("depressed");
+            intentExtra = "depressed";
             break;
         case R.id.imageButtonExcited:
-            Toast.makeText(getApplicationContext(), "Excited", Toast.LENGTH_SHORT).show();
-            rm.execute("excited");
+            intentExtra = "excited";
             break;
         case R.id.imageButtonHappy:
-            Toast.makeText(getApplicationContext(), "Happy", Toast.LENGTH_SHORT).show();
-            rm.execute("happy");
+            intentExtra = "happy";
             break;
         case R.id.imageButtonnervous:
-            Toast.makeText(getApplicationContext(), "Nervous", Toast.LENGTH_SHORT).show();
-            rm.execute("nervous");
+            intentExtra = "nervous";
             break;
         case R.id.imageButtonSad:
-            Toast.makeText(getApplicationContext(), "Sad", Toast.LENGTH_SHORT).show();
-            rm.execute("sad");
+            intentExtra = "sad";
             break;
         default:
             Toast.makeText(getApplicationContext(), "Invalid record?", Toast.LENGTH_SHORT).show();
         }
+        Intent intent = new Intent(this, ConfirmMood.class).putExtra(Intent.EXTRA_TEXT, intentExtra);
+        startActivity(intent);
     }
 
     public void login(View v) {
@@ -112,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sp = this.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putString("gender", gender);
-        editor.commit();
+        editor.apply();
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
