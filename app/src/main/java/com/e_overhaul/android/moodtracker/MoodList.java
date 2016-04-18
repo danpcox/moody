@@ -59,14 +59,10 @@ public class MoodList extends AppCompatActivity {
             });
 // Refresh the data the onCreate
         refresh(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
     }
 
-    @Override
-    public boolean onCreateOptionsMenu (Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_mood_list, menu);
-        return true;
-    }
 
     @Override
     public boolean onOptionsItemSelected (MenuItem item) {
@@ -75,10 +71,6 @@ public class MoodList extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        if(id == R.id.action_home) {
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-        }
         return super.onOptionsItemSelected(item);
     }
 }

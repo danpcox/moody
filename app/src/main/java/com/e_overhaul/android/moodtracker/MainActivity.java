@@ -3,6 +3,8 @@ package com.e_overhaul.android.moodtracker;
 import java.util.zip.Inflater;
 
 import android.Manifest;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -38,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         SharedPreferences sp = this.getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         String gender = sp.getString("gender", "");
+// If first run, show gender choice screen
         if (gender.isEmpty()) {
             setContentView(R.layout.first_run_screen);
         } else {
@@ -45,12 +48,19 @@ public class MainActivity extends AppCompatActivity {
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
         }
+// Populate the DataCache with info.
+// Store the location in the DataCache layer (used in all API calls)
         DataCache.getInstance().setLocation(getLastBestLocation());
         String android_id = Settings.Secure.getString(this.getContentResolver(),
             Settings.Secure.ANDROID_ID);
+// Store Device ID and Gender (used in all API calls)
         DataCache.getInstance().setDeviceID(android_id);
         DataCache.getInstance().setGender(gender);
+// Set up the mood images map of strings --> drawables
         setMoodImages();
+// Start the notification service
+        startNotifications();
+
     }
 
     @Override
@@ -154,6 +164,14 @@ public class MainActivity extends AppCompatActivity {
         dc.addMoodImage("happy", BitmapFactory.decodeResource(getResources(), R.drawable.happy));
         dc.addMoodImage("nervous", BitmapFactory.decodeResource(getResources(), R.drawable.nervous));
         dc.addMoodImage("sad", BitmapFactory.decodeResource(getResources(), R.drawable.sad));
+        dc.addMoodImage("farty", BitmapFactory.decodeResource(getResources(), R.drawable.fart));
     }
+    private void startNotifications() {
+        Intent notificationIntent = new Intent(getApplicationContext(), ShowNotificationService.class);
+        PendingIntent contentIntent = PendingIntent.getService(getApplicationContext(), 0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
 
+        AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        am.cancel(contentIntent);
+        am.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + (AlarmManager.INTERVAL_FIFTEEN_MINUTES / 15), (AlarmManager.INTERVAL_FIFTEEN_MINUTES / 15), contentIntent);
+    }
 }

@@ -49,6 +49,12 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.e_overhaul.android.moodtracker.MainActivity"/>
         </activity>
+
+        <service
+            android:name=".ShowNotificationService"
+            android:enabled="true"
+            android:exported="true">
+        </service>
     </application>
 
 </manifest>

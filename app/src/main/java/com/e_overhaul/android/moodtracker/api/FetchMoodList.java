@@ -55,7 +55,7 @@ public class FetchMoodList extends AsyncTask<List<String>, Void, List<Mood>>{
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
         String jsonResult = null;
-        int daysToLookBack = 12;
+        int daysToLookBack = 25;
         String apiURI = "https://www.e-overhaul.com/Moods/api/listMoods.php?user=" + DataCache.getInstance().getDeviceID();
 
         try {
